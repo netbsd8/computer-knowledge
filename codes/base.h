@@ -6,6 +6,7 @@
 
 #include <deque>
 #include <list>
+#include <map>
 #include <queue>
 #include <set>
 #include <unordered_map>
