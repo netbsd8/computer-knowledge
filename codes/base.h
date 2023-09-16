@@ -3,6 +3,9 @@
 
 #include <sstream>
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <climits>
 
 #include <deque>
 #include <list>
