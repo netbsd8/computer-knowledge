@@ -27,12 +27,21 @@ class Solution:
         return n 
 
     # # O(nlogn) solution
-    # def hIndex(self, citations: List[int]) -> int:
-    #    s_citations = sorted(citations, reverse=True)
-    #     for i,v in enumerate(s_citations):
-    #         if v <= i:
-    #             return i
-    #     return len(s_citations)
+    def hIndex_nlogn(citations):
+        # Sort the array of citations in non-decreasing order
+        citations.sort()
+        
+        # Initialize the h-index to 0
+        h = 0
+        
+        # Iterate through the sorted array
+        for i in range(len(citations)):
+            # Check if the current citation value is greater than or equal to the number of papers
+            if citations[i] >= len(citations) - i:
+                # Update the h-index to the maximum of the current h-index and the number of papers
+                h = max(h, len(citations) - i)
+        
+        return h
 
     # O(n^2) solution
     def hIndex_space(self, citations: List[int]) -> int:
