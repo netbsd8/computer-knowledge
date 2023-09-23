@@ -10,9 +10,10 @@
 ### Heap (Priority Queue)
 # Processing
 ## Keep States
-### hashset
+### hashset / visited array
 - [visited array: number of island](graph/number_of_islands.py)
 - [visited sets: valid sudoku](matrix/valid_sudoku.py)
 # Binary Search
 # Divide & Conquer (No efficient impact)
 ## recursive
+### memo O(2^n) -> O(n^2)
