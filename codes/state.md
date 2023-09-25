@@ -1,5 +1,7 @@
 # Intermediate State Maintain
 ## Data Structure
+### hash map
+- [copy list with random pointer](linked_list/copy_list_with_random_pointer.py)
 ### queue
 - [course schedule](graph/course_schedule.py)
 - [course schedule II](graph/course_schedule_II.py)
