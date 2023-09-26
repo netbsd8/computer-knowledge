@@ -1,0 +1,3 @@
+# State Watch
+- Clients are interested in specific server value changes but continuous polling can be inefficient and overwhelming. A solution involves clients registering interest with the server for notifications on state changes, using a single socket channel and a request pipeline. This applies to a key-value store, and both client and server sides require implementations.
+- Examples include Zookeeper and Etcd for event-based notifications.
