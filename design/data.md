@@ -14,6 +14,9 @@
 	- easy to send data to a centralized monitoring server
 	- easy to scale (just on server side)
 # Storage
+## Replication
+## Sharding
+
 # Query
 # Use Cases
 ## Time Series DBs
