@@ -16,13 +16,20 @@
 # Storage
 ## Replication
 ## Sharding
+- sharding key / partition key
+  - user id
+- resharding data / moving data around
+  - consistent hash
+- celebrity problem
+  - allocate a shard for each celebrity or further partition
+- join and de-normalization
 
 # Query
 # Use Cases
 ## Time Series DBs
 - Challenge and opportunity
      - scale of data
-     - a****apend-only data(or insert-only)****
+     - a****append-only data(or insert-only)****
      - always timestamped and ordered by timestamp
  - Use cases
      - Time-series data is primarily used for running analytics and deducing conclusions.
@@ -42,7 +49,7 @@
  - Functional Requirements:
      - Windowing functions
      - Sharding capabilities
-     - TTL suporrt
+     - TTL support
      - Aggregate pipelines.
  - Design philosophy
      - Leverage the aforementioned characteristics
@@ -62,26 +69,6 @@
    - compaction
    - retention
    - indexing
-
-- References
- [Educative.io](http://Educative.io) - ****Time Series Database****
-
-[https://www.educative.io/courses ... ure-101/7nVw0ZWxM9w](https://www.educative.io/courses ... ure-101/7nVw0ZWxM9w)
-
-****Time-series data: Why (and how) to use a relational database instead of NoSQL****
-
-[https://www.timescale.com/blog/t ... nosql-d0cd6975e87c/](https://www.timescale.com/blog/t ... nosql-d0cd6975e87c/)
-
-TimescaleDB - ****Architecture & Concepts****
-
-[https://legacy-docs.timescale.com/v1.7/introduction/architecture](https://legacy-docs.timescale.com/v1.7/introduction/architecture)
-
-**In-memory indexing and the Time-Structured Merge Tree (TSM)**
-
-[https://docs.influxdata.com/infl ... pts/storage_engine/](https://docs.influxdata.com/infl ... pts/storage_engine/)
-
-[https://en.wikipedia.org/wiki/Time_series_database](https://en.wikipedia.org/wiki/Time_series_database)
-
-Druid Architecture
-
-[https://druid.apache.org/docs/latest/design/architecture.html](https://druid.apache.org/docs/latest/design/architecture.html)
+  - Examples
+    - Prometheus
+    - InfluxDB

@@ -1,10 +1,14 @@
+# Client load
+## geoDNS
+- routing to the closest data center
+- disaster recovery
 # Caching
 ## strategies
 - read cache-aside: web service will retrieve the missing data and then update the cache
 - read cache-through: cache service will retrieve the missing data. It needs to warm the cache.
 - write-through:  the data is written to both the cache and the backing store. This ensures that the data is always consistent between the two but can result in slower write performance
 - write-around: write operations bypass the cache and are written directly to the backing store. 
-- write-back: write operations are written to the cache and marked as “dirty.” The data is eventually written back to the backing store, but this can be done at a later time and may be done in a batch with other dirty cache entries.
+- batch write/write-back: write operations are written to the cache and marked as “dirty.” The data is eventually written back to the backing store, but this can be done at a later time and may be done in a batch with other dirty cache entries.
 ## invalidation / eviction
 - TTL: Each cached item is assigned a timestamp and a TTL value. Once the TTL expires, the corresponding item is automatically removed from the cache.
 - FIFO vs LRU vs LFU vs RR
@@ -13,7 +17,18 @@
 - Latency vs Throughput
 ## examples
 - Memcached
+  - distributed hash map (str -> str)
+  - consistent hash to access the storage node
+  - no design for reliability
 - Redis
+  - support more data types like set, map, list
+  - range queries on a single partition
+  - disk persistence via checkpointing or a write ahead log
+  - redis cluster
+    - single leader replication with automatic failover (gossip protocol: hard to reasoning errors)
+# Encoding
+- save network bandwidth and save disk space
+- thrift, protocol buffer
 # Batching requests
 - facts: mitigate network latency and request processing overhead when dealing with small data requests, and it involves combining multiple requests into a single batch for processing on the server side.
 - solution:
@@ -37,4 +52,23 @@
   - To prevent overwhelming the receiving node, there's an upper limit on the number of inflight requests.
   - A blocking queue is used to track inflight requests, initialized with the maximum allowed.
   - Once a response is received, the corresponding request is removed from the queue to make room for more.
+# Compression
+- time series data (delta / using XOR)
+- time window compaction
+# Searching
+## Index
+### reverse index
+- examples:
+  - elastic search
+    - string to tokenized and then do the index
+## partition
+- align with query
 # Read-heavy vs Write-heavy
+## read-heavy: 
+- master-slave
+  - all write to master, read distributed via slaves
+  - if master down, slave will be promoted to master/leader 
+- cache
+  - temp data store layer
+# bloomfilter
+- filter out nodes without the searching data 

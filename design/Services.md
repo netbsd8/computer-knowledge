@@ -1,3 +1,4 @@
+# Key generator
 # Coordination
 ## Zookeeper
 - It addresses coordination problems in distributed systems, including configuration management, leader election, distributed locks, and managing cluster membership.
@@ -58,6 +59,22 @@
 ![structure](zookeeper_structure.webp)
 # Message Queue
 ## Kafka
+- structure:
+  - broker nodes
+    - topic: crossing multiple brokers via partitions
+      - partition: each broker holds multiple partitions
+      - replicas: partition will be replicated to other brokers
+- support both read-heavy and write-heavy
+  - persistent data
+  - log data to disk -- append only
+- from the point view of kafka, it keeps no state on what the consumers are reading from a topic
+  - When a consumer group is created, Kafka automatically assigns partitions from subscribed topics to the consumers within the group. Each partition is assigned to exactly one consumer within the group. This ensures that each message in a partition is processed by only one consumer within the group, allowing for load balancing and parallelism.
+- a producer must know which partition to write to, this is not up to the broker
+  - It's possible for the producer to attach a key to the record dictating the partition the record should go to. All records with the same key will arrive at the same partition. Before a producer can send any records, it has to request metadata about the cluster from the broker. The metadata contains information on which broker is the leader for each partition and a producer always writes to the partition leader. The producer then uses the key to know which partition to write to, the default implementation is to use the hash of the key to calculate partition, you can also skip this step and specify partition yourself.
+- consumer vs consumer group
+  - each consumer will read independently, for example, notification message
+  - consumers within the same consumer group read the topic together, and each consumer in the group will read a different partition
+    - working together in parallel (workers)
 - the Kafka consumer follows a similar pattern to the Kafka producer. Kafka provides client libraries for various programming languages, and consumers are typically developed as custom applications using these libraries. 
   - Producer:
     - Buffering Messages: When a producer sends messages to Kafka, it doesn't immediately send each message as a separate request. Instead, it buffers messages in memory and groups them into batches. The producer specifies a maximum batch size or a maximum time interval for how long it will wait before sending a batch.

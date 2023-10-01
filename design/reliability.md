@@ -77,6 +77,30 @@
   - 📆 Sessions on servers have a maximum time to live and can be removed if no HeartBeats are received.
   - ⏲️ Scheduled tasks periodically check and remove expired client sessions.
 # Automatic Failover
+## checkpoints - snapshot
+## handling burst traffic - message queue
+# Data lost
+## WAL - write ahead log
 # Examples
 ## message queue
 - handle situation (saving data) if either consumer or producer failed
+# Rate Limit
+## Traffic shaping
+### build allow() based on the current time and status
+- leaky bucket (guarantee constant rate)
+  - bucket will be a fix value n and be reset every sec
+  - no guarantee that the requests get processed in a fixed amount of time
+  - starvation
+- token bucket (allow large burst to be sent faster rate)
+  - add token every delta time
+  - the bucket can hold at most b-tokens (upper limit)
+  - packets can only be transmitted when there are enough token
+- fixed window count 
+  - burst within a short-time period
+- sliding log
+- sliding window
+  - weight with previous window
+  - assume the distribution of requests in the previous window is even
+# Design
+## stateless vs stateful
+- control plane vs data plane
