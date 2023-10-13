@@ -18,10 +18,12 @@ import os
 # dirnames: A list of the names of the subdirectories in dirpath (excluding '.' and '..' which are special entries).
 # filenames: A list of the names of the non-directory files in dirpath.
 for dirpath, dirnames, filenames in os.walk("project"):
-    print("Current Directory:", dirpath)
-    print("Subdirectories:", dirnames)
-    print("Files:", filenames)
-    print("-----")
+    for filename in filenames:
+        print("Current Directory:", dirpath)
+        print("Subdirectories:", dirnames)
+        print("Files:", filenames)
+        fullpath = os.path.join(dirpath, filename)
+        print("-----")
 
 """
 Output:
@@ -60,3 +62,33 @@ for dirpath, _, filenames in os.walk("project"):
             total_lines += count_lines_in_file(file_path)
 
 print(f"Total lines in .py and .html files: {total_lines}")
+
+
+# read raw block
+# Open() takes three parameters: a filename, the mode in which the file should be opened, and a buffer size.
+# open will create the file is not existed
+with open('text.txt', 'rb') as source_file:
+    while True:
+        chunk = source_file.read(1024)
+        if not chunk:
+            print("No data")
+            break
+        else:
+            print(chunk)
+
+# write
+with open("writeable.txt", 'w') as f:
+    f.write("text\nfile\n")
+    f.writelines("%s\n" % i for i in range(10))
+    f.close()
+
+
+# Other os functions
+os.chdir("/tmp")
+os.mkdir("/tmp/os_mod_explore")
+os.listdir("/tmp/os_mod_explore")
+os.stat("/tmp/os_Mod_explore")
+os.rename("/tmp/os_mod_explore/test_dir1", "/tmp/os_mod_explore/test_dir1_renamed")
+os.rmdir("/tmp/os_mod_explore/test_dir1_renamed")
+os.makedirs("test/test_subdir1/test_subdir2")
+os.getcwd()
