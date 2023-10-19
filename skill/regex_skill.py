@@ -43,22 +43,16 @@ matches = re.findall("a", text)
 print(matches)  # ['a', 'a']
 Substitution:
 
-python
-Copy code
 text = "Hello, John!"
 new_text = re.sub("John", "Doe", text)
 print(new_text)  # Hello, Doe!
 Compilation (for repeated use):
 
-python
-Copy code
 pattern = re.compile("\\d+")  # matches one or more digits
 result = pattern.findall("Phone: 1234, Age: 25")
 print(result)  # ['1234', '25']
 Grouping:
 
-python
-Copy code
 text = "Email me at email@example.com"
 match = re.search("(\\w+)@(\\w+).(\\w+)", text)
 if match:

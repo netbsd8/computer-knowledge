@@ -1,0 +1,16 @@
+# Performance
+## Tech
+### AIO vs event-based IO vs non-blocking IO
+- Asynchronous I/O (AIO), event-based I/O, and non-blocking I/O are three techniques for performing I/O operations in a non-blocking manner. While these techniques are similar in some respects, there are some key differences in how they are implemented:
+
+  - AIO: AIO is implemented using system calls like aio_read and aio_write that initiate I/O operations in a non-blocking manner, and provide a notification mechanism for the completion of the I/O operation. AIO is typically implemented in the kernel and can provide high performance and scalability for I/O-intensive applications.
+
+  - Event-based I/O: Event-based I/O is implemented using system calls like select, poll, epoll, or kqueue that allow an application to monitor multiple I/O sources, such as sockets or file descriptors, for events in a non-blocking manner. When an I/O event occurs, the application can perform the necessary I/O operations and continue processing other events. Event-based I/O is typically implemented in the user space and can provide a more general and flexible model for structuring applications around non-blocking I/O.
+
+  - Non-blocking I/O: Non-blocking I/O is implemented using system calls like read and write that allow I/O operations to be performed in a non-blocking manner by returning an error code indicating that the operation would block, rather than blocking the application. The application can then perform other tasks, or retry the I/O operation at a later time. Non-blocking I/O is typically implemented in the user space and is suitable for applications that need to perform simple I/O operations without requiring high performance or scalability.
+- Examples:
+  - Databases: Many modern database systems use AIO to perform I/O operations on disk-based storage, in order to achieve high performance and scalability. For example, Oracle Database, PostgreSQL, and MongoDB all support AIO for asynchronous read and write operations on storage devices. On the other hand, some databases use event-based I/O for handling incoming queries and client connections, such as MySQL with its support for non-blocking I/O and the epoll system call.
+
+  - Network servers: Network servers, such as web servers, DNS servers, and proxy servers, often use event-based I/O to handle multiple incoming client connections and I/O operations. For example, the popular Nginx web server uses event-based I/O with the epoll system call to efficiently handle incoming HTTP requests and send responses. Some servers, such as Apache, also support AIO for certain types of I/O operations, such as reading and writing to disk files.
+
+  - File systems: Many modern file systems use AIO to perform I/O operations on disk-based storage, in order to achieve high performance and scalability. For example, the XFS file system used in some Linux distributions supports AIO for asynchronous read and write operations on disk devices. However, some file systems, such as the Btrfs file system, use event-based I/O with the epoll system call for certain types of I/O operations, such as handling file operations and metadata updates.

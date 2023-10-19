@@ -43,8 +43,10 @@
 - When a process ends, all of the memory and resources associated with it are deallocated so they can be used by other processes. However, the process’s entry in the process table remains. The parent can read the child’s exit status by executing the wait system call, whereupon the zombie is removed. The wait call may be executed in sequential code, but it is commonly executed in a handler for the SIGCHLD signal, which the parent receives whenever a child has died.
 - After the zombie is removed, its process identifier (PID) and entry in the process table can then be reused. However, if a parent fails to call wait, the zombie will be left in the process table.
   - Zombie State: When a process exits, it enters the "zombie" state. In this state, the process is not consuming any system resources except for a small amount of memory to store its exit status and process ID.
+  - Kernel Sends SIGCHLD: The kernel sends the SIGCHLD signal to the parent process of the terminated child. This signal informs the parent that one of its child processes has terminated.
   - Parent Process's Responsibility: It is the responsibility of the parent process of the zombie to "reap" or acknowledge its termination. When the parent process does this, the kernel removes the zombie process entry from the process table, freeing up any associated resources.
-  - Wait System Call: The parent process usually calls the wait() or waitpid() system call to retrieve the exit status of its child process (the zombie). This call also reaps the zombie.
+    - Parent Process Handles SIGCHLD: When the parent process receives the SIGCHLD signal, it typically needs to take action to "reap" the terminated child process. This action usually involves calling the wait() or waitpid() system call.
+    - Wait System Call: The parent process usually calls the wait() or waitpid() system call to retrieve the exit status of its child process (the zombie). This call also reaps the zombie.
   - Kernel Cleanup: When the wait() or waitpid() call is made by the parent process, the kernel cleans up the zombie process entry, and it is removed from the process table. At this point, the process is completely gone.
 # Other related Topics
 ## terminal : text input/output devices

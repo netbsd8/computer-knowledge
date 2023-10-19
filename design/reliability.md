@@ -84,7 +84,21 @@
 # Examples
 ## message queue
 - handle situation (saving data) if either consumer or producer failed
+- distributed async requests
 # Rate Limit
+- APIs
+  - allow(user_id, endpoint_name, timestamp)
+- DB Schema
+  - in memory: hashmap['user_id'] -> (counter, timestamp)
+- Architecture
+  - fixed window
+    - reset the hashmap per min
+  - sliding window
+    - maintain a sorted set/list
+    - for each allow() call, remove the stale items and compare the left with the restriction number
+  - partition:
+    - user_id / IP for the partition key
+
 ## Traffic shaping
 ### build allow() based on the current time and status
 - leaky bucket (guarantee constant rate)

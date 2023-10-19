@@ -1,6 +1,31 @@
 import collections
 import heapq
 
+# arguments
+def test_func(arg1, arg2, *args, **kwargs):
+    print("arg1:", arg1)
+    print("arg2:", arg2)
+    print("args:", args)
+    print("kwargs:", kwargs)
+
+test_func(1, 2, 3, 4, 5, kwarg1=6, kwarg2=7)
+"""
+arg1: 1
+arg2: 2
+args: (3, 4, 5)
+kwargs: {'kwarg1': 6, 'kwarg2': 7}
+
+"""
+
+# class variable vs instance variable
+class Circle:
+    pi = 3.14
+
+    def __init__(self, radius):
+        self.radius = radius
+        self.area = Circle.pi * radius**2
+
+
 # init an 2-d array
 m = 9
 n = 9

@@ -1,7 +1,7 @@
 # Main idea
 #  
 # Reliability
-## Failure handling
+## Failure handling - failover
 - recoverable failures: 
   - read from data warehouse / write to upstream  
   - retry

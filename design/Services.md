@@ -1,4 +1,10 @@
 # Key generator
+- UUID
+- Multiple MySQL with self increasing ID
+  - rond-robin load balance.
+  - if 8 nodes, each node +8 for generated IDs
+  - Twitter Snowflake
+    - timestamp (41bits) + node_id (10bits) + increasing sequences (12bits)
 # Coordination
 ## Zookeeper
 - It addresses coordination problems in distributed systems, including configuration management, leader election, distributed locks, and managing cluster membership.
@@ -67,6 +73,17 @@
 - support both read-heavy and write-heavy
   - persistent data
   - log data to disk -- append only
+- partition decision
+  - Producer Message Distribution:
+
+  -  Partitioner: Kafka provides a configurable component called a "partitioner." The partitioner is responsible for determining which partition a producer's message should be assigned to within a specified topic. The partitioner uses a certain strategy to make this decision, such as round-robin, random selection, or a custom logic based on message attributes. The producer specifies the partitioner implementation when creating a Kafka producer.
+  - Consumer Partition Assignment:
+
+    - Group Coordinator: Kafka maintains the concept of a "group coordinator" for each consumer group. The group coordinator is responsible for managing the assignment of partitions to consumers within the group. It ensures that partitions are evenly distributed among consumers and handles rebalancing when consumers join or leave the group.
+
+    - Consumer Group Protocol: Kafka consumers use a consumer group protocol to coordinate and make partition assignment decisions. The protocol includes mechanisms for consumers to negotiate which partitions they will consume from based on their current state and the partitions available in the topic. Kafka's default behavior aims to distribute partitions as evenly as possible among consumers in the group.
+
+    - Offset Management: Kafka consumers also maintain their own offset information for the partitions they are assigned to. They record the last processed message offset for each partition. This allows consumers to resume reading from where they left off in case of failures or restarts.
 - from the point view of kafka, it keeps no state on what the consumers are reading from a topic
   - When a consumer group is created, Kafka automatically assigns partitions from subscribed topics to the consumers within the group. Each partition is assigned to exactly one consumer within the group. This ensures that each message in a partition is processed by only one consumer within the group, allowing for load balancing and parallelism.
 - a producer must know which partition to write to, this is not up to the broker

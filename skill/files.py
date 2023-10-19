@@ -24,6 +24,10 @@ for dirpath, dirnames, filenames in os.walk("project"):
         print("Files:", filenames)
         fullpath = os.path.join(dirpath, filename)
         print("-----")
+    
+    dirs = []
+    for dir in dirnames:
+        dirs.append(dir)
 
 """
 Output:

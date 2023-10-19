@@ -72,3 +72,8 @@
   - temp data store layer
 # bloomfilter
 - filter out nodes without the searching data 
+# hyperloglog
+- avoid whole search of DB
+- in-memory operations
+- count unique user accounts approximately
+- count most-right zero bits, this may distributed on multiple nodes and then average

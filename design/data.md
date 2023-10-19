@@ -72,3 +72,8 @@
   - Examples
     - Prometheus
     - InfluxDB
+
+# Sql vs NoSql
+- NoSql doesn't support transaction
+- most NoSql auto scaling
+- 

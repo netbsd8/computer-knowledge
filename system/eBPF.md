@@ -9,6 +9,7 @@
   - attach_xdp(), bypass kernel
 - traffic control
   - Qdisc (queue discipline)
+  - TC command based
 # bcc framework
 - python based
 - 
