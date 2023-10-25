@@ -1,0 +1,66 @@
+# Metrics
+## CPU utilization
+- per min -> per sec -> hitmap (each col a second, each row may be several tens of micrsec, color dense show CPU usage at that time period)
+    - perf: Linux profiler (sampling)
+      - perf record -F99 -a
+    - CPU flame graph (via perf): a visualization of profiled stack traces and what are the precentage that the different code functions are doing
+      - x-axis: population of the samples; y-axis: function
+      - [flame graph](../pictures/CPU-flame-graph-implementation.png)
+
+- Root Cause
+  - Observability
+  - Methodology
+    - Service Level:
+      - Resource Analysis
+      - RED method
+        - Request Rate
+        - Errors
+        - Duration
+      - Metric and event correlations
+        - tracing
+      - Latency Drilldowns
+    - Instance Level:
+      - Log Analysis
+      - Micro-benchmarking
+      - Drill-down analysis
+      - USE method
+        - Utilization
+        - Saturation
+        - Errors
+      - [Linux performance Tool](../pictures/Linux_components_performance_tools.png)
+        - Container ware tool (cgroup supporting)
+        - Statistics
+          - vmstat, pidstat, iostat, sar
+        - Profiling
+          - CPU flame graph
+        - Tracing
+          -  ftrace
+          -  perf
+             -  iolatency (hardware)
+             -  iosnoop (application)
+             -  example: perf record -e block:block_rq_issue --filter rwbs ~ "*M*" -g -a | then do perf report -n -stdio
+          -  eBPF (sandbox)
+             -  [ebpf tools](../pictures/ebpf_tools.png)
+             -  biosnoop
+          - Processor Analysis
+            - [CPU Utilization meaning](../pictures/CPU_Utilization_Calculation.png)
+            - waiting on stalled cycles
+            - IPC: instruction per cycle, range(0.x, x), Netflix says if < 0.2, stalled on memory
+            - msrs (model specific registers)
+              - showboost -- check the clock rate
+          - Memory
+            - tlbstat -C0 1
+          - [CPU tools take aways](../pictures/cpu-perf-tool.png)
+  - Velocity
+
+# Improvement Method
+## Load Increases
+- Auto Scaling
+  - based on load average CPU utilization latency;
+- Bad Push
+  - traffic managed by Load balancers, do canary roll tests automatically
+- INstance Failure
+  - latency and fault tolerance for dependency services
+- Disaster Recovery
+  - region level failure fault tolerance
+    - simulation: Chaos engineering
