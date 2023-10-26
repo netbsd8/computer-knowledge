@@ -8,7 +8,23 @@
       - [flame graph](../pictures/CPU-flame-graph-implementation.png)
 
 - Root Cause
+  - Basic Steps:
+    - [uptime](../pictures/uptime_output.png)
+    - [top](../pictures/top_output.png)
+    - [vmstat](../pictures/vmstat_output.png)
+    - [iostat](../pictures/iostat_output.png)
+    - [free](../pictures/free_output.png)
+    - [strace](../pictures/strace_output.png)
+    - [tcpdump](../pictures/tcpdump_output.png)
+    - [nstat](../pictures/nstat_output.png)
+    - [slabtop](../pictures/slabtop_output.png)
+    - [pcstat](../pictures/pcstat_output.png)
+    - [docker stats](../pictures/docker_stats_output.png)
+    - [showboost](../pictures/showboost_output.png)
+    - [other static performance tuning tools](../pictures/static_performance_tunning_tools.png)
   - Observability
+    - [tools](../pictures/Linux_components_performance_tools.png) vs htop with colors
+      - sampling, so it may miss short-run processes; using atop instead
   - Methodology
     - Service Level:
       - Resource Analysis
@@ -23,17 +39,44 @@
       - Log Analysis
       - Micro-benchmarking
       - Drill-down analysis
+      - Workload Characterization
+        - Who: which pids, programs, users
+        - Why: code paths, context
+        - What: CPU instructions, cycles
+        - How: changing over time
       - USE method
         - Utilization
-        - Saturation
+        - Saturation --> queue
+          - if CPU is saturated (high CPU utilization, there may be competition for the CPU caches)
         - Errors
+      - [linux perf analysis in 60s](../pictures/Linux_perf_analysis_in_60s.png)
+        - uptime --> load averages
+        - dmesg -T | tail --> kernel errors
+        - vmstat 1 --> overall stats by time
+        - mpstat -P ALL 1 --> CPU balance
+        - pidstat 1 --> process usage
+        - iostat -xz 1 --> disk I/O
+        - free -m --> memory usage
+        - sar -n DEV 1 --> network I/O
+        - sar -n TCP, ETCP 1 --> TCP stats
+        - top --> check overview
       - [Linux performance Tool](../pictures/Linux_components_performance_tools.png)
         - Container ware tool (cgroup supporting)
         - Statistics
-          - vmstat, pidstat, iostat, sar
+          - vmstat, pidstat, iostat, 
+            - [mpstat](../pictures/mpstat_output.png), 
+            - [pmcarch](../pictures/pmcarch_output.png) --> intel performance counters
+              - IPC metrics --> it should be tuned to >= 1.5
+              - LLC: L3 cache hit rate
+              - [context switch](../pictures/perf_context_switch.png): 
+              - [cpudist](../pictures/bpf_cpudist_process.png)
+                - high value will clear the L1 cache, put more pressure on LC cache and drive the hit rate down
+                - high value will prevent application from having enough time to warm up the CPU cache
+            - sar
         - Profiling
           - CPU flame graph
         - Tracing
+          - [tracing stack](../pictures/Linux_tracing_stack.png)
           -  ftrace
           -  perf
              -  iolatency (hardware)
@@ -54,6 +97,14 @@
   - Velocity
 
 # Improvement Method
+## Benchmarking
+## Profiling
+## Tracing
+- [linux tracing events](../pictures/Linux_tracing_events.png)
+  - Offline CPU Tracing
+## Tuning
+- [Linux tuning settings](../pictures/normal_tuning_settings.png)
+- [Linux tuning settings2](../pictures/linux_tuning_settings_2.png)
 ## Load Increases
 - Auto Scaling
   - based on load average CPU utilization latency;
