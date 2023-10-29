@@ -86,13 +86,69 @@
              -  [ebpf tools](../pictures/ebpf_tools.png)
              -  biosnoop
           - Processor Analysis
+            - Clock rate
+            - [Interconnects](../pictures/CPU_Interconnection.png) (waiting there be counted into CPU Utilization)
+            - Special instructions: AVX-512 Vector Neural Network Instructions
+            - Multi-socket
+            - [SMT](../pictures/SMT_hardware_thread.png) (simultaneous multithreading / hardware threads)
+            - [P-cores and E-cores](../pictures/P-cores_E-cores.png)
+            - Accelerators:
+              - GPUs
+              - FPGAs
+              - IPUs, DPUs, TPUs, etc.
             - [CPU Utilization meaning](../pictures/CPU_Utilization_Calculation.png)
-            - waiting on stalled cycles
-            - IPC: instruction per cycle, range(0.x, x), Netflix says if < 0.2, stalled on memory
+              - waiting on stalled cycles
+              - IPC: instruction per cycle, range(0.x, x), Netflix says if < 0.2, stalled on memory
             - msrs (model specific registers)
               - showboost -- check the clock rate
           - Memory
+            - pmcarch (performance monitoring counters) --> IPC
+            - DDR5 memory 
+              - bandwidth: 51.2 GB/s
+              - Latency: 14.38 ns (memory clock: 200MHZ)
+              - HBM: high bandwidth memory (HBM only server (package CPU with HBM memory))
+            - Server DRAM size: up to 4TB DDR-4
             - tlbstat -C0 1
+          - Disks
+            - rotational disk
+              - 550MB/s
+            - flash memory-based disks
+              - SSD: 13GB/s
+            - Storage interconnects
+              - SAS-4 cards
+              - PCIe 5.0: 63GB/s with 16 lane
+              - NVme 1.4: bandwidth bounded by PCIe bus
+          - Networking
+            - Hardware:
+              - 400 Gb/s switches/routers
+              - NIC: kTLS(TLS offload to the NIC)
+              - FPGA, ePBF supports
+            - Protocols:
+              - QUIC/HTTP/3
+                - TCP-like sessions over (fast) UDP.
+                - 0-RTT connection handshakes.
+              - MP-TCP
+                - multipath TCP. Use multiple paths in parallel to imporve throughput and reliability (Linux 5.6)
+              - TCP Congestion control Algorithm
+                - DCTCP (data center TCP -- Linux 3.18)
+                - TCP NV (new vegas -- Linux 4.8)
+                - tCP BBR (Bottleneck Bandwidth and RTT improvement)
+              - Linux Networking
+                - [queues](../pictures/Network_Stack_Queues.png)
+                - [sending path](../pictures/Linux_network_send_path.png)
+                - XDP (eXpress Data Path): a role previously served by DPDK and kernel bypass.
+          - Kernel
+            - [io_uring](../pictures/io_uring_01.png) -- faster syscalls using shared buffers and allow I/O to be batched and async 
+            - eBPF
+          - Hypervisors
+            - Containers:
+              - Cgroup v2
+              - container scheduler adoption
+              - perf tools still not container aware: 
+            - [Hardware](../pictures/Hypervisors_hardware_based.png) 
+              - Xen
+              - KVM
+              - Nitro
           - [CPU tools take aways](../pictures/cpu-perf-tool.png)
   - Velocity
 

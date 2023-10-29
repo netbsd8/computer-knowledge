@@ -73,21 +73,13 @@
 - Asynchronous I/O: Many modern applications use asynchronous I/O techniques, such as epoll and AIO, to minimize the overhead of managing large numbers of connections. These techniques allow the application to process multiple connections simultaneously without blocking on I/O operations, which can improve the responsiveness and throughput of the application.
 
 - Hardware acceleration: Some servers use hardware acceleration, such as offloading network processing to dedicated network interface cards (NICs), in order to handle large volumes of traffic more efficiently.
-## bufferbloat
-- In a network, data is transmitted in packets, which are stored in buffers at various points in the network until they can be forwarded to their destination. If the buffers are too large, they can cause packets to be delayed and increase latency in the network, resulting in poor performance for users.
-- To address bufferbloat, various techniques have been developed, including active queue management (AQM) algorithms, such as CoDel and PIE, that can help to reduce the size of buffers and prevent excessive queuing of packets. In addition, Quality of Service (QoS) mechanisms can be used to prioritize certain types of traffic and prevent the bufferbloat phenomenon from negatively affecting real-time applications, such as voice and video.
 ## Receive packet steering (RPS)
 - The main purpose of RPS is to improve the scalability and performance of network packet processing in multi-core systems by distributing incoming packets across multiple CPU queues or cores. This can help to avoid bottlenecks and improve parallelism, and can be especially useful in high-bandwidth or high-throughput scenarios.
 - However, RPS can also introduce overhead and contention, especially if the CPU queues or cores are not evenly loaded or if there is a high degree of contention for shared resources such as memory or network buffers. In some cases, this can lead to increased latency, lower throughput, or even lower CPU utilization than a single-queue or single-core system.
 - To mitigate these issues, there are several techniques that can be used in conjunction with RPS, such as receive flow steering (RFS), which can help to further distribute incoming packets across multiple CPU cores or threads based on their flow or connection characteristics, and RSS (receive-side scaling), which can help to balance incoming traffic across multiple NIC queues.
-## Generic Receive Offload (GRO)
-- When a network interface receives a large packet, GRO can group the individual packets that make up the large packet into a single buffer or "segment" in the kernel memory. This can help to reduce the number of packets that need to be processed and passed up the networking stack, and can also reduce the amount of memory required to store the individual packets.
-- GRO can be especially useful for high-bandwidth or high-throughput scenarios where the network interface is receiving a large number of packets, such as in data center or cloud environments. By reducing the amount of CPU and memory overhead required for packet processing, GRO can help to improve the scalability and performance of the networking stack, and can help to avoid bottlenecks and contention.
-- Other related features of the networking stack include Generic Segmentation Offload (GSO), which can perform a similar function for outgoing packets, and Large Receive Offload (LRO), which can perform a similar function at the network interface hardware level.
-- fragmentation of IP packet vs GRO
-  - The fragmentation of IP packets at the IP layer is a different operation than the grouping of IP packets into a single buffer or "segment" by GRO. Fragmentation is used when a network packet is too large to be transmitted over the network in a single packet, so it is divided into smaller fragments that can be transmitted and reassembled at the receiving end.
-
-  - On the other hand, GRO is used when a large network packet is transmitted as a series of smaller IP packets that can be processed individually by the networking stack. GRO groups these individual IP packets into a single buffer or "segment" in the kernel memory, which represents the original, larger network packet that was transmitted.
+## bufferbloat
+- In a network, data is transmitted in packets, which are stored in buffers at various points in the network until they can be forwarded to their destination. If the buffers are too large, they can cause packets to be delayed and increase latency in the network, resulting in poor performance for users.
+- To address bufferbloat, various techniques have been developed, including active queue management (AQM) algorithms, such as CoDel and PIE, that can help to reduce the size of buffers and prevent excessive queuing of packets. In addition, Quality of Service (QoS) mechanisms can be used to prioritize certain types of traffic and prevent the bufferbloat phenomenon from negatively affecting real-time applications, such as voice and video.
 ## HTTP persistent connections
 - HTTP persistent connections allow multiple HTTP requests to be sent over a single TCP connection, without the need to establish a new connection for each request. This can improve the performance of web applications by reducing the overhead of connection establishment.
 ## Persistent TCP connections
@@ -122,4 +114,101 @@
 ## multi-queue NIC vs multi-channel NIC
 - A multi-channel NIC (network interface card) is a NIC that has multiple physical interfaces or channels, typically on separate PCI or PCIe lanes. This can allow for greater bandwidth and increased network throughput by spreading the traffic across multiple channels. Each channel may have its own MAC address and may be associated with a different IP address or network interface.
 
+### multi-queue
 - A multi-queue NIC, on the other hand, is a NIC that has multiple transmit and/or receive queues within a single physical interface. This allows for improved scalability and performance in multi-core systems, as different queues can be assigned to different processor cores to avoid contention and maximize parallelism. Each queue may have its own buffer, packet filter, or traffic classification mechanism, and may be associated with a different priority or quality of service (QoS) level.
+- RSS:
+  - The traffic that goes from the wire to the kernel can be spread into different queues, using a mechanism called RSS - Receive Side Scaling.
+  - This mechanism assumes some hash function, that performs calculations based on packet parameters, and sends the packet to relevant queue: ethtool -l ens5f0
+  - Assuming that the hashing is fair, it splits the traffic based on the SMAC, DIP/SIP and TCP/UDP port numbers.
+  - When the OS maps the interrupts, it allocates interrupt request to each rx queue: ethtool -g ens5f0
+  - always have one interrupt mapped to single core: echo 0xff >  /proc/irq/219/smp_affinity
+## Offload
+### GRO/LRO: Generic Receive Offload
+- Reason:
+  - with the heaviest bag of all being the 1500-byte maximum transfer unit (MTU) limit. With packet size capped at 1500 bytes, a 10G network link running at full speed will be transferring over 800,000 packets per second: 10Gb / (1500B x 8) = 8333 packets. So CPU needs to handle 800k packets/sec.
+- When a network interface receives a large packet, GRO can group the individual packets that make up the large packet into a single buffer or "segment" in the kernel memory. This can help to reduce the number of packets that need to be processed and passed up the networking stack, and can also reduce the amount of memory required to store the individual packets.
+- GRO can be especially useful for high-bandwidth or high-throughput scenarios where the network interface is receiving a large number of packets, such as in data center or cloud environments. By reducing the amount of CPU and memory overhead required for packet processing, GRO can help to improve the scalability and performance of the networking stack, and can help to avoid bottlenecks and contention.
+- Other related features of the networking stack include Generic Segmentation Offload (GSO), which can perform a similar function for outgoing packets, and Large Receive Offload (LRO), which can perform a similar function at the network interface hardware level.
+- fragmentation of IP packet vs GRO
+  - The fragmentation of IP packets at the IP layer is a different operation than the grouping of IP packets into a single buffer or "segment" by GRO. Fragmentation is used when a network packet is too large to be transmitted over the network in a single packet, so it is divided into smaller fragments that can be transmitted and reassembled at the receiving end.
+
+  - On the other hand, GRO is used when a large network packet is transmitted as a series of smaller IP packets that can be processed individually by the networking stack. GRO groups these individual IP packets into a single buffer or "segment" in the kernel memory, which represents the original, larger network packet that was transmitted.
+  - LRO is a bit of a flawed solution, according to Herbert; the real problem is that it "merges everything in sight." This transformation is lossy; if there are important differences between the headers in incoming packets, those differences will be lost. 
+  -  In GRO, the criteria for which packets can be merged is greatly restricted; the MAC headers must be identical and only a few TCP or IP headers can differ. In fact, the set of headers which can differ is severely restricted.
+  -   there has not been a lot of effort toward using LRO in 1G drivers. In general, current CPUs can keep up with a 1G data stream without too much trouble. There might be a benefit, though, in embedded systems which typically have slower processors.
+
+### TSO/GSO: generic segmentation offload mechanism 
+
+# Layers
+## Ethernet
+### [Etherenet header](../pictures/Ethernet_header.png)
+### MTU and fragmentation
+- MTU (Maximum Transmission Unit) refers to the maximum size of a frame (for Ethernet) or packet (for IP) that can be transmitted over a network link. If the data to be sent exceeds the MTU, it needs to be fragmented to fit.
+
+- IP Layer:
+  - IPv4: The total length field in the IPv4 header is 16 bits long, which means the maximum size of an IPv4 packet (including the header) is 2^16 - 1 = 64K
+
+- IPv6: In IPv6, the payload length field is also 16 bits long. This means that the maximum size of the payload (not including the IPv6 header but potentially including upper-layer headers like TCP or UDP) is 65,535 bytes. However, IPv6 introduces a "jumbo payload" option, which can extend this for payloads larger than 65,535 bytes, but its use is not common in typical scenarios.
+
+- TCP Layer:
+- For TCP, the constraint is not directly about the "length" of the data, but rather the sequence number space. TCP uses a 32-bit sequence number, which theoretically allows for 2^32 = 4G of data. However, in practice, TCP's "length" or window is constrained by factors like the receive window size, congestion window, and Maximum Segment Size (MSS).
+
+- The MSS is a TCP option that specifies the largest amount of data in bytes that a device can accept in a single non-fragmented TCP segment. It does not include the TCP header length.
+
+- IPv4 Fragmentation: If a packet exceeds the MTU of the outbound link, and the "Don't Fragment" (DF) bit is not set in the packet's header, the IP layer will fragment the packet into smaller chunks that fit the MTU. Each fragment will have its own IP header and will be reassembled at the destination.
+
+- IPv6 Fragmentation: IPv6 doesn't support fragmentation by routers in the middle of the network. Hosts are expected to perform Path MTU Discovery (PMTUD) to determine the smallest MTU on the path to the destination and then send packets that fit within that MTU. If necessary, the source host can fragment packets, but routers in the path won't.
+
+- TCP and MTU: TCP tries to avoid IP fragmentation by using the MSS, which is typically set based on the MTU of the outbound interface minus the sizes of the IP and TCP headers. If PMTUD determines that an even smaller MTU is needed on the path, the MSS can be adjusted. This is why it's common to see the MSS option negotiated during the TCP three-way handshake.
+
+- If a TCP segment or IP packet is sent that's too large for an intermediary link (and exceeds the MTU), and the DF bit is set (or it's an IPv6 packet), the sender will receive an ICMP "Fragmentation Needed" (for IPv4) or "Packet Too Big" (for IPv6) message. The sender should then adjust the size of the packets it sends.
+## Jumbo frames:
+- "jumbo frames" refer to Ethernet frames that are larger than the standard Maximum Transmission Unit (MTU) of 1,500 bytes. Jumbo frames are used primarily on local area networks (LANs) and data center environments to improve performance, especially for high-throughput applications.
+- The typical size of a jumbo frame is 9,000 bytes.
+- To use jumbo frames, they must be explicitly enabled on network devices, such as switches and routers, and on the network interfaces of servers and storage devices. Once enabled, the MTU settings on all devices in the path should be adjusted accordingly.
+- Reduced Overhead: Larger frames mean that, for a given amount of data, fewer frames need to be sent, which reduces the per-frame overhead.
+- Better Throughput: Fewer frames lead to fewer CPU interrupts, allowing for higher data rates and better overall network throughput.
+- Efficiency: Jumbo frames are especially beneficial for applications that transfer large amounts of data, like storage area networks (SANs) or certain streaming applications.
+- Latency: While throughput can be improved, individual jumbo frames take longer to serialize onto the network, which can introduce a bit more latency.
+## IP layer
+### [ip heaer](../pictures/IP_header.png)
+### longest prefix match
+- The Longest Prefix Match (LPM) algorithm is fundamental for IP routing. The goal is to find the route entry with the longest prefix that matches the destination IP address of a packet.
+
+- There are various ways to implement LPM, ranging from simple linear searches to more complex data structures like tries (specifically radix or Patricia tries) and binary search on prefix lengths. 
+- Using a Trie (Radix or Patricia Trie):
+
+  - Each node in the trie has child nodes for each possible bit value (0 or 1 for binary tries).
+  - Each node can also store information about the route if a route ends at that node.
+  - Insertion (Building the Trie):
+    - Convert the IP address of the route to its binary representation.
+    - Starting from the root, traverse the trie based on the binary value of each bit in the IP address. If the corresponding child node doesn't exist, create it.
+    - When the prefix length is reached, store the route information in the current node.
+  - Lookup (Finding the Longest Prefix Match):
+    - Convert the destination IP address to its binary representation.
+    - Start from the root and traverse the trie based on the binary value of each bit in the IP address.
+    - Every time you encounter a node with route information, update the "current best match."
+    - Continue traversing until you either reach the end of the IP address or hit a point in the trie where there is no matching child node.
+    - The last route information you encountered is the longest prefix match.
+
+`
+function longestPrefixMatch(trie, ipAddress):
+    currentNode = trie.root
+    bestMatch = null
+
+    for each bit in ipAddress:
+        if currentNode has route information:
+            bestMatch = currentNode.route
+
+        if bit is 1 and currentNode has a child node for 1:
+            currentNode = currentNode.child[1]
+        else if bit is 0 and currentNode has a child node for 0:
+            currentNode = currentNode.child[0]
+        else:
+            break
+
+    return bestMatch
+`
+## TCP/UPD layer
+### [TCP header](../pictures/TCP_header.png)
+### [UDP header](../pictures/UDP_header.png)
