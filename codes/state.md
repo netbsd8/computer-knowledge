@@ -18,3 +18,7 @@
 - [Merge Intervals](intervals/merge_intervals.py) 
 - [Insert Interval](intervals/insert_interval.py) 
 - [Insert Interval](intervals/min_number_arrow_bust_balloons.py) 
+# global state maintain
+## thinking opposite:
+- Leetcode 918 Maximum Sum Circular Subarray
+  - globalMax vs globalMin

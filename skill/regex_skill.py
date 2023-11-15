@@ -60,7 +60,6 @@ if match:
     print(match.group(1))  # email
     print(match.group(2))  # example
     print(match.group(3))  # com
-This is a very basic introduction. Regular expressions are a deep topic and can get very complex. To truly master them, you'll need to study them in depth and practice on a variety of patterns. The Python re documentation provides a more exhaustive look at what's possible.
 """
 
 import re

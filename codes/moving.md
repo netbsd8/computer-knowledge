@@ -25,6 +25,8 @@
 ### question's natural data structure
 ### question
 # Direction
+## backwards
+- [Leetcode 1470 - Shuffle the Array (Constant Space)]
 ## Stack
 - current state needs to know or operate on most recent states
   - [valid parentheses](stack/valid_parentheses.py)
