@@ -26,3 +26,11 @@
     - 最后deploy了说一下结果圆满发布按时以及之后的retrospective上我把这件事做了复盘并严格执行了这段代码从前端移除去后端的实施short-term和long-term兼顾了codequality和delivery也兼顾了（有矛盾但重要的是完成任务有分歧但重要的是成员合作）当然也不要说得尽善尽美面试官假如问如果再来一次你有什么可以改进的我会说tech角度我们的代码应该在abstraction上再加强一些Dependencyinjection多用一些下次万一不得已又要加hacky东西不用先做refactor非tech角度我会说我思考如何使流程更成熟而不是每次都依靠临场应变
   - BQ题到最后就是复合句的写作跟写代码一样不要长算式而是一个function就return一个值unittestcoverage查一查这些中间变量有不对的赶紧停变招再call再试多线程多asynccall别只顾自说自话别只有output没有input如果没有constraint先问constraint如果题目太ambiguous我们就自己先来缩小scope等等等等
   - 掌握了这些每轮最后“你有什么问题问我么”其实也都是很好的交流点可以反问一些BQ问题的比如对面是hiringmanager我就常问假如我是你的队员你最看重的value是什么？你希望我更backbone一点、还是implementthedelegatedtask更要紧？比如对面是techlead我也会问你希望我在high-leveldesign多花心思还是implementation时更注重test-drivencode多花心思？……面试毕竟是双向选择我问这些的时候也是真想知道这个组的现有组员都是怎么做活儿的楼主也可以反问环节问一些BQ问题你通过设计这些问题也会逐渐理解别人问你的时候他想探求的是你的哪方面品质的有无
+
+  =================================================
+  - 这个问题不光是一个面试题是真的再测试你怎么处理工作事情测试你在工作中的行为准则
+  - 所谓退一步海阔天空我在回答问题之前先退一步反抛出问题：为什么工作中会有conflict？
+  - 然后回答自己抛出的问题：因为我和同事都care我们都希望把工作做好如果我对手头的工作不care的话我什么事情都能：好好好做个老好人对不对？
+  - 这么一来我就和同事build了同样的基础点既然我们highlevel的目标相同都想把事情做好只是具体怎么执行出现了分歧那这就不是一个大问题
+  - 那回答到这步其实我的答案就很简单的推进下去了：communication可以通过不同程度的communication和同事一起坐下来讨论不同方案的pro和con,从requirement出发来评定各自的好处最终一起决定一个大家都满意的方案去执行
+  - 你看这样是谁说服谁根本不重要把一个conflict的问题变成了一个teamwork和management的问题

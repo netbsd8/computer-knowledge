@@ -98,3 +98,55 @@ matches = re.finditer(pattern, text)
 ip_addresses = [match.group() for match in matches]
 
 print(ip_addresses)
+
+# extracting URLs
+text = "Visit https://www.example.com or http://example.net for more info."
+pattern = r"https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+"
+
+match = re.search(pattern, text)
+
+if match:
+    print(f"URL found at index {match.start()} to {match.end()}")
+    print("URL:", match.group())
+
+# output
+# URL found at index 6 to 27
+# URL: https://www.example.com
+
+
+# Splitting text by multiple delimiters
+delimiters = r"[;,\s]"
+text = "apple,banana;orange grape"
+
+fruits = re.split(delimiters, text)
+print(fruits)  # ['apple', 'banana', 'orange', 'grape']
+
+# checking password strength
+password_pattern = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+password = "Password123!"
+
+if re.match(password_pattern, password):
+    print("Password is strong.")
+else:
+    print("Password is weak.")
+
+# match email
+email_pattern = r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}"
+text = "Contact us at contact@example.com or support@example.net"
+
+matches = re.findall(email_pattern, text)
+print(matches)  # ['contact@example.com', 'support@example.net']
+
+# extracting dates:
+date_pattern = r"\b\d{1,2}[-/]\d{1,2}[-/]\d{4}\b"
+text = "Today's date is 10-13-2023 and the event is on 11/15/2023."
+
+dates = re.findall(date_pattern, text)
+print(dates)  # ['10-13-2023', '11/15/2023']
+
+# replace text
+phone_pattern = r"\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b"
+text = "Call 123-456-7890 or 987 654 3210 for details."
+
+replaced_text = re.sub(phone_pattern, "[REDACTED]", text)
+print(replaced_text)  # Call [REDACTED] or [REDACTED] for details.
